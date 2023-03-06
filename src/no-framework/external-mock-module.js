@@ -4,24 +4,12 @@
  * Execute: Use `npx jest --watch src/no-framework/external-mock-module.js` to watch the test
  */
 
-function fn(impl = () => {}) {
-  const mockFn = (...args) => {
-    mockFn.mock.calls.push(args)
-    return impl(...args)
-  }
-  mockFn.mock = {calls: []}
-  return mockFn
-}
+require('../__no-framework-mocks__/utils')
 
 const utilsPath = require.resolve('../utils')
-require.cache[utilsPath] = {
-  id: utilsPath,
-  filename: utilsPath,
-  loaded: true,
-  exports: {
-    getWinner: fn((p1, p2) => p1),
-  },
-}
+const mockUtilsPath = require.resolve('../__no-framework-mocks__/utils.js')
+
+require.cache[utilsPath] = require.cache[mockUtilsPath]
 
 const assert = require('assert')
 const thumbWar = require('../thumb-war')
